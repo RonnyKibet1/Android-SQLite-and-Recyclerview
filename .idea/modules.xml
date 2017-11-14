@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidSQLitedatabase.iml" filepath="$PROJECT_DIR$/AndroidSQLitedatabase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android-SQLite-and-Recyclerview.iml" filepath="$PROJECT_DIR$/Android-SQLite-and-Recyclerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

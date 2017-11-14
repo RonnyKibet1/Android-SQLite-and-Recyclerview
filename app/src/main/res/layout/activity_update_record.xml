@@ -10,14 +10,14 @@
 
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add new user"
+        android:text="Update user"
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/userName"
+        android:id="@+id/userNameUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -25,7 +25,7 @@
         android:hint="Name" />
 
     <EditText
-        android:id="@+id/userAge"
+        android:id="@+id/userAgeUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -33,7 +33,7 @@
         android:hint="Age" />
 
     <EditText
-        android:id="@+id/userOccupation"
+        android:id="@+id/userOccupationUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -41,7 +41,7 @@
         android:hint="Occupation" />
 
     <EditText
-        android:id="@+id/userProfileImageLink"
+        android:id="@+id/userProfileImageLinkUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -49,9 +49,9 @@
         android:hint="Image profile url" />
 
     <Button
-        android:id="@+id/addNewUserButton"
+        android:id="@+id/updateUserButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add User"/>
+        android:text="Update User"/>
 
 </LinearLayout>

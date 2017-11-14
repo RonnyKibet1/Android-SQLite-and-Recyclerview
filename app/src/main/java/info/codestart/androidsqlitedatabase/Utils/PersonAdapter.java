@@ -1,32 +1,29 @@
 package info.codestart.androidsqlitedatabase.Utils;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import info.codestart.androidsqlitedatabase.R;
+import info.codestart.androidsqlitedatabase.UpdateRecordActivity;
 import info.codestart.androidsqlitedatabase.model.Person;
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder> {
     private List<Person> mPeopleList;
     private Context mContext;
+    private RecyclerView mRecyclerV;
 
 
     // Provide a reference to the views for each data item
@@ -34,9 +31,10 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mJObIdTxtV;
-        public TextView mPositionTitleTxtV;
-        public TextView mOrganizationNameTxtV;
+        public TextView personNameTxtV;
+        public TextView personAgeTxtV;
+        public TextView personOccupationTxtV;
+        public ImageView personImageImgV;
 
 
         public View layout;
@@ -44,9 +42,12 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            mJObIdTxtV = (TextView) v.findViewById(R.id.userName);
-            mPositionTitleTxtV = (TextView) v.findViewById(R.id.userAge);
-            mOrganizationNameTxtV = (TextView) v.findViewById(R.id.userOccupation);
+            personNameTxtV = (TextView) v.findViewById(R.id.name);
+            personAgeTxtV = (TextView) v.findViewById(R.id.age);
+            personOccupationTxtV = (TextView) v.findViewById(R.id.occupation);
+            personImageImgV = (ImageView) v.findViewById(R.id.image);
+
+
 
 
         }
@@ -65,9 +66,10 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PersonAdapter(List<Person> myDataset, Context context) {
+    public PersonAdapter(List<Person> myDataset, Context context, RecyclerView recyclerView) {
         mPeopleList = myDataset;
         mContext = context;
+        mRecyclerV = recyclerView;
     }
 
     // Create new views (invoked by the layout manager)
@@ -89,17 +91,59 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        final Person job = mPeopleList.get(position);
-        holder.mJObIdTxtV.setText(job.getName());
-        holder.mPositionTitleTxtV.setText(job.getAge());
-        holder.mOrganizationNameTxtV.setText(job.getOccupation());
+        final Person person = mPeopleList.get(position);
+        holder.personNameTxtV.setText("Name: " + person.getName());
+        holder.personAgeTxtV.setText("Age: " + person.getAge());
+        holder.personOccupationTxtV.setText("Occupation: " + person.getOccupation());
+        Picasso.with(mContext).load(person.getImage()).placeholder(R.mipmap.ic_launcher).into(holder.personImageImgV);
+
+        //listen to single view layout click
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Choose option");
+                builder.setMessage("Update or delete user?");
+                builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    //go to update activity
+                        goToUpdateActivity(person.getId());
+
+                    }
+                });
+                builder.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PersonDBHelper dbHelper = new PersonDBHelper(mContext);
+                        dbHelper.deletePersonRecord(person.getId(), mContext);
+
+                        mPeopleList.remove(position);
+                        mRecyclerV.removeViewAt(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, mPeopleList.size());
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
+        });
 
 
+    }
 
-
-
+    private void goToUpdateActivity(long personId){
+        Intent goToUpdate = new Intent(mContext, UpdateRecordActivity.class);
+        goToUpdate.putExtra("USER_ID", personId);
+        mContext.startActivity(goToUpdate);
     }
 
 
